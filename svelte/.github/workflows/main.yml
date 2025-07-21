@@ -1,0 +1,41 @@
+name: Sync Svelte to Buoy-Agent/svelte
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-svelte:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Svelte Repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set Git Identity
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+    - name: Clone Buoy-Agent Public Monorepo
+      run: |
+        git clone https://x-access-token:${{ secrets.PUBLIC_REPO_TOKEN }}@github.com/SLSU-Turing-Machines/Buoy-Agent.git monorepo
+        cd monorepo
+        git checkout main || git checkout -b main
+
+    - name: Sync Svelte to monorepo/svelte/
+      run: |
+        rsync -av --delete ./ monorepo/svelte/ \
+          --exclude=.git \
+          --exclude=monorepo
+
+    - name: Commit and Push
+      run: |
+        cd monorepo
+        git add .
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        git commit -m "[svelte] $COMMIT_MSG" || echo "Nothing to commit"
+        git push origin main
