@@ -1,0 +1,42 @@
+name: Sync ML to Buoy-Agent Root
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-ml:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout ML Repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set Git Identity
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+    - name: Clone Buoy-Agent Public Monorepo
+      run: |
+        git clone https://x-access-token:${{ secrets.PUBLIC_REPO_TOKEN }}@github.com/SLSU-Turing-Machines/Buoy-Agent.git monorepo
+        cd monorepo
+        git checkout main || git checkout -b main
+
+    - name: Sync ML to root (exclude README.md)
+      run: |
+        rsync -av --delete ./ monorepo/ \
+          --exclude=.git \
+          --exclude=monorepo \
+          --exclude=README.md
+
+    - name: Commit and Push
+      run: |
+        cd monorepo
+        git add .
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        git commit -m "[ml-models] $COMMIT_MSG" || echo "Nothing to commit"
+        git push origin main

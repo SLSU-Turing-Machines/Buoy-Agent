@@ -1,0 +1,27 @@
+{
+  "base_model": {
+    "description": "Stacked ensemble (CNN/LSTM, Iso Forest, XGBoost) for phishing. Use first.",
+    "accuracy": 0.9723
+  },
+  "gd_boost": {
+    "description": "Gradient Boosting Classifier: Good for complex, non-linear phishing.",
+    "accuracy": 0.9490
+  },
+  "knn": {
+    "description": "K-Nearest Neighbors: Classifies phishing via distance metrics.",
+    "accuracy": 0.9101
+  },
+  "rand_forest": {
+    "description": "Random Forest Classifier: Ensemble of decision trees; handles high-dimensional features.",
+    "accuracy": 0.9525
+  },
+  "svm": {
+    "description": "Support Vector Machine: Finds optimal hyperplanes; works with scaled features.",
+    "accuracy": 0.9424
+  },
+  "tabnet": {
+    "description": "TabNet: Deep learning for tabular phishing; uses attention.",
+    "accuracy": 0.9389
+  }
+  
+}
