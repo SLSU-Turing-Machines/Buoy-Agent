@@ -1,19 +1,29 @@
-# Buoy's AI Agent
+# Buoy AI Agent
 
-an extension of TheTuringMachine's AI Pipeline to include a smart ollama llm agent
+An extension of **TheTuringMachine's AI Pipeline**, enhanced with an intelligent Ollama LLM agent for phishing detection and cybersecurity automation.
 
-use
+## Installation
 
-```powershell
+Ensure you are using **Python 3.10.11**. Then, install the required dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-to be able to start this
+## Running the Server
 
-start server with app>app.py
+Start the server using:
 
-you must add a .env file in the root folder with a key like:
+```bash
+python app/app.py
+```
+
+## Environment Configuration
+
+Create a `.env` file in the project root directory with the following content:
 
 ```env
-buoy=server_key_here
+buoy=your_server_key_here
 ```
+
+Replace `your_server_key_here` with your actual API key or token.
