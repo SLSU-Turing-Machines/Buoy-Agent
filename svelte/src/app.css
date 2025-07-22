@@ -21,7 +21,6 @@
 }
 
 body {
-	min-height: 100vh;
 	margin: 0;
 	background-attachment: fixed;
 	background-color: var(--color-bg-1);
@@ -104,4 +103,10 @@ button:focus:not(:focus-visible) {
 	position: absolute;
 	width: 1px;
 	white-space: nowrap;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box !important;
 }
