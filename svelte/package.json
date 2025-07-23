@@ -37,6 +37,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"animejs": "^4.0.2"
+		"animejs": "^4.0.2",
+		"marked": "^16.1.1"
 	}
 }

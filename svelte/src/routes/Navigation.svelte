@@ -1,27 +1,69 @@
 <script>
     import { page } from '$app/stores';
     import { derived } from 'svelte/store';
-     import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import { animate, stagger } from 'animejs';
-
+    import { darkMode } from '$lib/stores/darkMode.js'; // Assuming you have a store for dark mode
     import { tick } from 'svelte';
    const path = derived(page, $page => $page.url.pathname);
-$: if ($path === '/chatbot') animateChatbotNav();
+    $: if ($path === '/chatbot') animateChatbotNav();
 
-async function animateChatbotNav() {
-  await tick();
+    async function animateChatbotNav() {
+    await tick();
 
-  animate('.navigation ul li', {
-    translateX: ['-150px', '0px'],
-    opacity: 1,
-    delay: stagger(500, { start: 900 }),
-    duration: 2000,
-    ease: 'cubicBezier(0.06, 0.9, 0.42, 0.99)'
-  });
+    animate('.navigation ul li', {
+        translateX: ['-150px', '0px'],
+        opacity: 1,
+        delay: stagger(500, { start: 900 }),
+        duration: 2000,
+        ease: 'cubicBezier(0.06, 0.9, 0.42, 0.99)'
+    });
+
+  
 }
-  
 
-  
+   function toggleDarkMode() {
+    darkMode.update(value => !value);
+  }
+
+  $: {
+    // You can still animate your navigation elements here based on $darkMode
+    const img = document.querySelector('.navigation img');
+    if (img) {
+      animate(img, {
+        opacity: 0,
+        duration: 800,
+        ease: 'easeInOutQuad',
+        complete: () => {
+          img.src = $darkMode ? 'src/lib/images/buoy_title_dark.png' : 'src/lib/images/buoy_title_light.png';
+          animate(img, {
+            opacity: 1,
+            duration: 800,
+            ease: 'easeInOutQuad'
+          });
+        }
+      });
+    }
+
+    animate('.navigation', {
+      backgroundColor: $darkMode ? '#333' : '#F8FBF8',
+      color: $darkMode ? '#FFF' : '#000',
+      duration: 1000,
+      ease: 'cubicBezier(0.5, 0.46, 0.09, 0.95)'
+    });
+
+    animate('.navigation a', {
+      color: $darkMode ? '#FFF' : '#000',
+      duration: 1000,
+      ease: 'cubicBezier(0.5, 0.46, 0.09, 0.95)'
+    });
+
+    animate('hr', {
+      backgroundColor: $darkMode ? '#FFF' : '#000',
+      duration: 1000,
+      ease: 'cubicBezier(0.5, 0.46, 0.09, 0.95)'
+    });
+  }
 </script>
 
 {#if $path !== '/' && $path !== '/about'}
@@ -33,6 +75,7 @@ async function animateChatbotNav() {
                 <li style="margin-bottom: 0;"><a href="/chatbot"><span class="fa-regular fa-trash-can"></span> Clear Chat</a></li>
                 <hr />
                 <li><a href="/about">About</a></li>
+                <li on:click={toggleDarkMode}><button class="modes">Switch to Dark Mode</button></li>
             </ul>
         </nav>
     </div>
@@ -55,7 +98,7 @@ async function animateChatbotNav() {
     }
 
     hr {
-    background: white;
+    background: black;
     height: 2px;           /* Add height */
     border: none;          /* Remove default border */
     width: 100%;           /* Optional: full width */
@@ -129,7 +172,7 @@ async function animateChatbotNav() {
     .navigation ul li:hover{
         background-color: rgb(105, 105, 105);
     }
-    a{
+    .navigation a{
         text-decoration: none;
         color: black;
     }
