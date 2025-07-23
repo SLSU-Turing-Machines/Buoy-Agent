@@ -1,0 +1,38 @@
+{
+  "canisters": {
+    "buoy_scraper_backend": {
+      "build": "npx azle buoy_scraper_backend",
+      "candid": "src/buoy_scraper_backend/buoy_scraper_backend.did",
+      "gzip": true,
+      "main": "src/buoy_scraper_backend/src/index.ts",
+      "tech_stack": {
+        "cdk": {
+          "azle": {}
+        },
+        "language": {
+          "javascript": {},
+          "typescript": {}
+        }
+      },
+      "type": "custom",
+      "wasm": ".azle/buoy_scraper_backend/buoy_scraper_backend.wasm"
+    },
+    "buoy_scraper_frontend": {
+      "dependencies": [
+        "buoy_scraper_backend"
+      ],
+      "source": [
+        "src/buoy_scraper_frontend/assets"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
