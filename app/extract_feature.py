@@ -19,7 +19,7 @@ import whois
 # The function extracts various details such as redirection chain, final URL, hostname, IP address, country, SSL certificate, meta description, HTML content, hosting provider, and abuse contact.
 # The function returns a dictionary containing the extracted details.
 #------------------------------------
-def get_web_desc(url):
+def get_web_desc(url, html_content=None):
     if not url.startswith("http"):
         url = "http://" + url
 
@@ -73,10 +73,14 @@ def get_web_desc(url):
             result["certificate"] = fetch_ssl_certificate(parsed_url.hostname)
 
         # Extract meta description and HTML content
-        page_content = response.text
+        if html_content is None:
+            html_content = response.text
+
+        page_content = html_content
         soup = BeautifulSoup(page_content, "html.parser")
         meta_desc = soup.find("meta", attrs={"name": "description"})
         result["description"] = meta_desc["content"] if meta_desc else None
+
 
         # Extract JavaScript and other suspicious elements
         script_tags = [str(tag) for tag in soup.find_all("script") if tag]

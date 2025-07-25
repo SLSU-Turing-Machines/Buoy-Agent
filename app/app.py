@@ -16,6 +16,7 @@
 # The default port is 8050 and will run on localhost.
 # ------------------------------------------
 
+import asyncio
 import sys
 import dill
 from flask import Flask, request, Response, jsonify
@@ -48,9 +49,9 @@ from agent.tools.knn_tool import KNNModel
 from agent.tools.rand_forest_tool import RandomForestModel
 from agent.tools.svm_tool import SVMModel
 from agent.tools.tabnet_tool import TabNetModel
-
-
 from agent.tools.load_scaler import LoadScaler
+
+from call_icp import fetch_from_icp
 
 from urllib.parse import unquote
 import re
@@ -186,7 +187,8 @@ def predict_url_phishing(input_url, ef, ttmt, model="gemma2:2b"):
         # Fetch webpage details
         yield send_event("Fetching webpage details...")
         try:
-            web_desc = ef.get_web_desc(input_url)
+            html_content = asyncio.run(fetch_from_icp(input_url))
+            web_desc = ef.get_web_desc(input_url, html_content)
             if not isinstance(web_desc, dict):
                 yield send_event("Error: Unable to fetch webpage details. The URL might be inaccessible.")
                 return

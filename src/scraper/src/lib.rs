@@ -13,6 +13,6 @@ async fn fetch_page(url: String) -> String {
 
     match make_http_request(request).await {
         Ok(response) => String::from_utf8_lossy(&response.body).to_string(),
-        Err(e) => format!("Error: {}", e),
+        Err(e) => format!("error: {}", e),
     }
 }
