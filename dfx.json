@@ -25,6 +25,11 @@
         "src/buoy-ai-frontend/assets"
       ],
       "type": "assets"
+    },
+    "scraper": {
+      "type": "rust",
+      "candid": "src/scraper/src/scraper.did",
+      "main": "src/scraper/src/lib.rs"
     }
   },
   "defaults": {
