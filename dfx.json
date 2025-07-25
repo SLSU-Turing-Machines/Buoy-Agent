@@ -1,10 +1,10 @@
 {
   "canisters": {
-    "buoy_scraper_backend": {
-      "build": "npx azle buoy_scraper_backend",
-      "candid": "src/buoy_scraper_backend/buoy_scraper_backend.did",
+    "buoy-ai-backend": {
+      "build": "npx azle buoy-ai-backend",
+      "candid": "src/buoy-ai-backend/buoy-ai-backend.did",
       "gzip": true,
-      "main": "src/buoy_scraper_backend/src/index.ts",
+      "main": "src/buoy-ai-backend/src/index.ts",
       "tech_stack": {
         "cdk": {
           "azle": {}
@@ -15,14 +15,14 @@
         }
       },
       "type": "custom",
-      "wasm": ".azle/buoy_scraper_backend/buoy_scraper_backend.wasm"
+      "wasm": ".azle/buoy-ai-backend/buoy-ai-backend.wasm"
     },
-    "buoy_scraper_frontend": {
+    "buoy-ai-frontend": {
       "dependencies": [
-        "buoy_scraper_backend"
+        "buoy-ai-backend"
       ],
       "source": [
-        "src/buoy_scraper_frontend/assets"
+        "src/buoy-ai-frontend/assets"
       ],
       "type": "assets"
     }

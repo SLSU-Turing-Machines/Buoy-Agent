@@ -1,5 +1,5 @@
 {
-    "name": "buoy_scraper_backend",
+    "name": "buoy-ai-backend",
     "version": "0.0.0",
     "private": true,
     "type": "module",
