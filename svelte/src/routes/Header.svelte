@@ -5,63 +5,107 @@
 	import { derived } from 'svelte/store';
 	import buoyTitleDark from '$lib/images/buoy_title_dark.png';
 	import light from '$lib/images/buoy_title_light.png';
+	import { onMount, tick } from 'svelte';
+	import { animate, stagger, onScroll } from 'animejs';
+	import icon from '$lib/images/buoy_icon.png';
+	import { animateHeaderOut } from '$lib/stores/header';
+	import { goto } from '$app/navigation';
+	// Derive the current path to change layout styles
+	const path = derived(page, ($page) => $page.url.pathname);
+	let header = null;
+	onMount(() => {
+		header = document.querySelector('header');
+	});
 
-  // Derive the current path to change layout styles
-  const path = derived(page, $page => $page.url.pathname);
+	$: {
+		if ($path === '/chatbot' || $path === '/login') {
+			animate(header, {
+				translateY: [0, -200],
+				opacity: [0, 1],
+				duration: 1500,
+				ease: 'outCubic'
+			});
+		} else {
+			animate(header, {
+				translateY: [-50, 0],
+				opacity: [0, 1],
+				duration: 1500,
+				ease: 'outCubic'
+			});
+		}
+	}
 
+	function goToLogin() {
+		goto('/login');
+	}
 </script>
 
 <header class:slide-bottom={$path === '/chatbot'}>
-	<h1><img src={light} alt="Buoy Title"/></h1>
+	<ul class="header-list">
+		<li>
+			<img src={icon} alt="Buoy Main Icon" />
+		</li>
+		<li>
+			<h1>Buoy</h1>
+		</li>
+		<li>
+			<div>
+				<ul class="forms">
+					<li><button on:click={goToLogin}>Login</button></li>
+					<li><button on:click={goToSignUp}>Sign Up</button></li>
+				</ul>
+			</div>
+		</li>
+	</ul>
 </header>
 
 <style>
 	header {
 		width: 100vw;
 		height: 10vh;
-		background-color: transparent;
-		padding: 10px;
 		display: flex;
 		position: fixed;
-		top: 0;
-		transition: transform 0.5s ease, opacity 0.5s ease;
 		opacity: 1;
-		transform: translateY(0);
+		color: #fffff0;
+		font-family: 'League Spartan', sans-serif;
+		margin-top: 20px;
+		justify-content: center;
 	}
 
-	img {
+	.header-list {
+		width: 50%;
 		height: 100%;
-		width: auto;
-		margin-left: 3%;
+		display: flex;
+		justify-content: space-between;
+		background: #28282b;
+		border-radius: 20px;
+		padding: 10px;
 	}
 
-	h1 {
-		color: white;
-		font-size: 2rem;
-		margin: 0;
-		
-		transform: translateY(0);
+	.header-list li {
+		display: flex; /* so image can center */
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+		pointer-events: auto;
 	}
 
-	.slide-bottom {
-		transform: translateY(-10vw);
-		opacity: 0;
+	.header-list li button {
+		background-color: blue;
 	}
 
-	.header-disappear {
-		animation: fadeOut 1s forwards;
+	.header-list li button:hover {
+		background-color: red;
 	}
 
-	@keyframes fadeOut {
-		0% {
-			opacity: 1;
-		}
-		99% {
-			opacity: 0;
-		}
-		100%{
-			opacity: 0;
-			display: none;
-		}
+	.header-list li:nth-child(3) div .forms {
+		display: flex;
+		gap: 20px;
+	}
+
+	.header-list img {
+		max-height: 100%; /* don’t exceed li height */
+		max-width: 100%; /* don’t exceed li width */
+		object-fit: contain;
 	}
 </style>

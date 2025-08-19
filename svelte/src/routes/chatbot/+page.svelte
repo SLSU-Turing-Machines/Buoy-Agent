@@ -9,7 +9,7 @@
 
 	const path = derived(page, $page => $page.url.pathname);
  
-    let stopper = true;
+    let stopper = false;
     let controller;
     let reader;
 
@@ -25,6 +25,8 @@
 			duration: 1000,
 			delay: 2500
 		});
+
+        stopper = false;
 	}
 
 	let message = '';
@@ -47,25 +49,48 @@
 
 	function addMessage(from, text) {
 		messages = [...messages, { from, text }];
+        tick().then(() => {
+		const elements = document.querySelectorAll(`.${from === 'You' ? 'user-message' : 'bot-message'}`);
+		const el = elements[elements.length - 1];
+
+            if (el) {
+                animate(el, {
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    duration: 1000,
+                    ease: 'cubicBezier(0.31, 0.52, 0.13, 0.84)'
+                });
+            }
+	    });
 	}
 
 	function updateOrAddStreaming(type, text) {
-		if (type === 'AI') {
-			if (aiStreamingIndex === -1) {
-				messages = [...messages, { from: 'Buoy Bot', text }];
-				aiStreamingIndex = messages.length - 1;
-			} else {
-				messages[aiStreamingIndex].text = text;
-			}
-		} else if (type === 'Buoy') {
-			if (buoyStreamingIndex === -1) {
-				messages = [...messages, { from: 'Buoy Bot', text }];
-				buoyStreamingIndex = messages.length - 1;
-			} else {
-				messages[buoyStreamingIndex].text = text;
-			}
+	// 🔄 Remove "Thinking..." if it's still present
+	if (statusMessageIndex !== -1) {
+		messages.splice(statusMessageIndex, 1);
+		statusMessageIndex = -1;
+
+		// Fix indexes if needed (optional defensive)
+		if (aiStreamingIndex > statusMessageIndex) aiStreamingIndex--;
+		if (buoyStreamingIndex > statusMessageIndex) buoyStreamingIndex--;
+	}
+
+	if (type === 'AI') {
+		if (aiStreamingIndex === -1) {
+			messages = [...messages, { from: 'Buoy Bot', text }];
+			aiStreamingIndex = messages.length - 1;
+		} else {
+			messages[aiStreamingIndex].text = text;
+		}
+	} else if (type === 'Buoy') {
+		if (buoyStreamingIndex === -1) {
+			messages = [...messages, { from: 'Buoy Bot', text }];
+			buoyStreamingIndex = messages.length - 1;
+		} else {
+			messages[buoyStreamingIndex].text = text;
 		}
 	}
+}
 
 	function updateStatusMessage(text) {
 		if (statusMessageIndex === -1) {
@@ -82,14 +107,14 @@
 	}
 
 	async function enterMessage() {
-		if (!message.trim()) return;
+		if (!message.trim() || stopper) return;
+
 
         stopper = true;
         const intro = document.querySelector('.intro');
-
-            intro.style.display = 'none'; // Hide the intro message
-            await tick(); // Wait for the class to be applied
-
+        await tick(); // Wait for the class to be applied
+	    intro.style.display = 'none'; // ✅ Now safe to hide it
+        
 		const userMessage = message;
 		addMessage('You', userMessage);
 		message = '';
@@ -158,7 +183,8 @@
 
 					if (status === 'Done') {
 						removeStreaming();
-
+                        stopper = false;
+                        updateStatusMessage('✅ Analysis complete!');
 						if (response?.predicted_class) {
 							const verdict = response.predicted_class;
 							const confidence = Math.round(response.confidence_phishing * 100);
@@ -252,9 +278,9 @@
 				bind:value={message}
 				placeholder="Type your message here..."
 				on:keydown={(e) => {
-					if (e.key === 'Enter') enterMessage();
+					if (e.key === 'Enter' && !stopper) enterMessage();
 				}} />
-			<button on:click={enterMessage}>Send</button>
+			<button on:click={enterMessage} disabled={stopper}>Send</button>
             <button on:click={stopStream}>Stop</button>
 		</div>
 	</div>
@@ -262,6 +288,10 @@
 
 
 <style>
+    button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
     .main-container{
         display: flex;
         justify-content: center;

@@ -70,11 +70,15 @@ pre {
 
 .text-column {
 	display: flex;
-	max-width: 48rem;
-	flex: 0.6;
+	width: 50%;
 	flex-direction: column;
 	justify-content: center;
-	margin: 0 auto;
+	align-items: center;
+	background-color: white;
+	padding: 2rem;
+	border-radius: 1.5rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin: var(--column-margin-top) auto;
 }
 
 input,
