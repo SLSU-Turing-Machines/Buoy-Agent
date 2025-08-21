@@ -1,0 +1,8 @@
+# /mnt/c/Users/aizhar/Documents/.dorahacks/Buoy-Agent/Cargo.toml
+[workspace]
+members = ["src/scraper"]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = "s"

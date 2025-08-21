@@ -1,7 +1,8 @@
-import { Canister, query, text } from 'azle';
+import { query } from "azle";
 
-export default Canister({
-    greet: query([text], text, (name) => {
+export default class BuoyBackend {
+    @query()
+    hello(name: string): string {
         return `Hello, ${name}!`;
-    })
-})
+    }
+}

@@ -1,3 +1,15 @@
+type HttpHeader = record {
+  name: text;
+  value: text;
+};
+
+type PageResult = record {
+  status: nat;
+  headers: vec HttpHeader;
+  body: text;
+};
+
 service : {
-  fetch_page: (text) -> (text) query;
-}
+  fetch_page: (text) -> (PageResult);
+};
+

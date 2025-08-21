@@ -24,3 +24,4 @@ target/
 node_modules/
 dist/
 .svelte-kit/
+src/buoy-ai-frontend/assets

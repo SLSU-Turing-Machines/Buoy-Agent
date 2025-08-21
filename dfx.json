@@ -1,21 +1,16 @@
 {
   "canisters": {
     "buoy-ai-backend": {
-      "build": "npx azle buoy-ai-backend",
+      "type": "custom",
+      "build": "npx azle build buoy-ai-backend",
       "candid": "src/buoy-ai-backend/buoy-ai-backend.did",
+      "wasm": ".azle/buoy-ai-backend/buoy-ai-backend.wasm",
       "gzip": true,
       "main": "src/buoy-ai-backend/src/index.ts",
       "tech_stack": {
-        "cdk": {
-          "azle": {}
-        },
-        "language": {
-          "javascript": {},
-          "typescript": {}
-        }
-      },
-      "type": "custom",
-      "wasm": ".azle/buoy-ai-backend/buoy-ai-backend.wasm"
+        "cdk": { "azle": {} },
+        "language": { "javascript": {}, "typescript": {} }
+      }
     },
     "buoy-ai-frontend": {
       "dependencies": [
@@ -28,6 +23,7 @@
     },
     "scraper": {
       "type": "rust",
+      "package": "scraper",
       "candid": "src/scraper/src/scraper.did",
       "main": "src/scraper/src/lib.rs"
     }
